@@ -1,0 +1,13 @@
+.footer {
+  margin-top: auto;
+    border-top: 1px solid #000000;;
+    width: 100%;
+  }
+  
+  .footer__copyright {
+    margin: 8px 0;
+  }
+  
+  .footer__cont {
+    margin-left: 40px;
+  }
