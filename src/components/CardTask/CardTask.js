@@ -1,7 +1,9 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setModalVisible } from "../../redux/actions/action";
 import "./CardTask.css";
 
-function CardTask({ task, loggedIn, openEditTask }) {
+function CardTask({ task }) {
   function status(status) {
     let taskStatus = "Задача не выполнена";
     if (status === 1) {
@@ -13,14 +15,29 @@ function CardTask({ task, loggedIn, openEditTask }) {
     }
     return taskStatus;
   }
+  const dispatch = useDispatch();
+  const isAdmin = useSelector((state) => state.todo.isAdmin);
+
+  const openEditTask = () => {
+    dispatch(
+      setModalVisible({
+        isVisible: true,
+        type: "taskEdit",
+        username: task.username,
+        email: task.email,
+        id: task.id,
+        text: task.text,
+      })
+    );
+  };
 
   return (
-    <article className="card" data-id={task.id}>
+    <article className="card">
       <button
         className={`card__button-edit ${
-          loggedIn ? "card__button-edit_visible" : ""
+          isAdmin ? "card__button-edit_visible" : ""
         }`}
-        onClick={(e) => openEditTask(e.target.closest("article").dataset.id)}
+        onClick={openEditTask}
       >
         Редактировать
       </button>

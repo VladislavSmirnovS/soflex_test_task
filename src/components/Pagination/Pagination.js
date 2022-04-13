@@ -1,7 +1,22 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getSortedTasks, setCurrentPage} from "../../redux/actions/action";
 import "./Pagination.css";
 
-function Pagination({ totalPage, page, changePage }) {
+function Pagination() {
+  const dispatch = useDispatch();
+  const totalNumber = useSelector((state) => state.todo.totalNumber);
+  const currentPage = useSelector((state) => state.todo.currentPage);
+  const sortCriteria = useSelector((state) => state.todo.sortCriteria);
+  const sortDirection = useSelector((state) => state.todo.sortDirection);
+const totalPages= Math.ceil(totalNumber / 3);
+
+  const changePage = (page) => {
+    console.log(page)
+    dispatch(setCurrentPage(page))
+    dispatch(getSortedTasks(sortCriteria, sortDirection, page));
+  };
+
   const getPageArray = (totalPages) => {
     let pages = [];
     for (let i = 0; i < totalPages; i++) {
@@ -9,7 +24,7 @@ function Pagination({ totalPage, page, changePage }) {
     }
     return pages;
   };
-  let pageArray = getPageArray(totalPage);
+  let pageArray = getPageArray(totalPages);
 
   return (
     <div className="pagination">
@@ -17,7 +32,7 @@ function Pagination({ totalPage, page, changePage }) {
         <span
           key={i}
           className={
-            page === i
+            currentPage === i
               ? "pagination__page pagination__page_active"
               : "pagination__page"
           }

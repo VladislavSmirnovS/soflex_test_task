@@ -1,22 +1,35 @@
+import { useSelector, useDispatch } from "react-redux";
+import { getSortedTasks,  setModalVisible,setSortCriteria, setToken} from "../../redux/actions/action";
+import React from "react";
+
 import "./Sort.css";
 
-function Sort({
-  serSortDirection,
-  serSortField,
-  openAddTask,
-  getTasks,
-}) {
+function Sort() {
+  const dispatch = useDispatch();
+  const sortCriteria = useSelector((state) => state.todo.sortCriteria);
+  const sortDirection = useSelector((state) => state.todo.sortDirection);
+  
+  function openAddTask () {
+    dispatch(setModalVisible({
+      isVisible: true,
+      type: "taskAdd",
+    }))
+  } 
+
+  
   function handleChange(e) {
-    serSortField(e.target.value);
-    getTasks();
+    dispatch(setSortCriteria(e.target.value));
+    dispatch(getSortedTasks(sortCriteria, sortDirection));
   }
 
   function sortUp() {
-    serSortDirection("asc");
+    dispatch(setSortCriteria("asc"));
+    dispatch(getSortedTasks(sortCriteria, sortDirection));
   }
 
   function sortDown() {
-    serSortDirection("desc");
+    dispatch(setSortCriteria("desc"));
+    dispatch(getSortedTasks(sortCriteria, sortDirection));
   }
 
   return (

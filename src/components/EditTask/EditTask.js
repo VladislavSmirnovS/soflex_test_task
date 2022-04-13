@@ -1,6 +1,12 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setModalVisible,
+  updateTask,
+  getSortedTasks,
+} from "../../redux/actions/action";
 
-function EditTask({ isOpen, onClose, task, onPopupClick, editedTask }) {
+function EditTask() {
   const [form, setForm] = React.useState({
     username: "",
     email: "",
@@ -8,14 +14,26 @@ function EditTask({ isOpen, onClose, task, onPopupClick, editedTask }) {
   });
 
   const [checkbox, setCheckbox] = React.useState(false);
+  const token = useSelector((state) => state.todo.token);
+  const dispatch = useDispatch();
+  const isModalVisible = useSelector((state) => state.todo.isModalVisible);
+
+  const closePopup = (e) => {
+    if (
+      e.target.classList.contains("popup") ||
+      e.target.classList.contains("popup__button-close")
+    ) {
+      dispatch(setModalVisible({ isVisible: false }));
+    }
+  };
 
   React.useEffect(() => {
     setForm({
-      username: task.username,
-      email: task.email,
-      text: task.text,
+      username: isModalVisible.username,
+      email: isModalVisible.email,
+      text: isModalVisible.text,
     });
-  }, [task]);
+  }, [isModalVisible]);
 
   function handleInput(e) {
     setForm({ ...form, text: e.target.value });
@@ -27,17 +45,41 @@ function EditTask({ isOpen, onClose, task, onPopupClick, editedTask }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    editedTask(form, checkbox);
+    let task = new FormData();
+    task.append("username", form.username);
+    task.append("token", token);
+    task.append("email", form.email);
+    task.append("text", form.text);
+    let status = 0;
+    if (form.text === isModalVisible.text) {
+      if (checkbox) {
+        status = 10;
+      }
+    } else {
+      if (checkbox) {
+        status = 11;
+      } else {
+        status = 1;
+      }
+    }
+    task.append("status", status);
+    dispatch(setModalVisible({ isVisible: false, type: "taskEdit" }));
+    dispatch(updateTask(task, isModalVisible.id, token));
+    dispatch(getSortedTasks());
   }
 
   return (
     <div
-      className={`popup  ${isOpen ? "popup_opened" : false}`}
-      onClick={onPopupClick}
+      className={`popup  ${
+        isModalVisible.isVisible && isModalVisible.type === "taskEdit"
+          ? "popup_opened"
+          : false
+      }`}
+      onClick={closePopup}
     >
       <div className={"popup__container"}>
         <button
-          onClick={onClose}
+          onClick={closePopup}
           className="popup__button-close"
           type="button"
           aria-label="Закрыть окно"
@@ -48,10 +90,10 @@ function EditTask({ isOpen, onClose, task, onPopupClick, editedTask }) {
         <form className="popup__form" onSubmit={handleSubmit}>
           <input
             className="popup__input"
-            value={task.username || ""}
+            value={form.username || ""}
             readOnly
           />
-          <input className="popup__input" value={task.email || ""} readOnly />
+          <input className="popup__input" value={form.email || ""} readOnly />
           <textarea
             className="popup__text-area"
             rows="10"

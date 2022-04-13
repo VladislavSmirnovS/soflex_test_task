@@ -1,10 +1,21 @@
 import React from "react";
-function Login({ isOpen, onClose, onPopupClick, loginUser }) {
-  const [login, setLogin] = React.useState("");
-  const [password, setPassword] = React.useState("");
+import { useSelector, useDispatch } from "react-redux";
+import { setModalVisible , login} from "../../redux/actions/action";
 
+
+function Login() {
+  const dispatch = useDispatch();
+  const [log, setLog] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const isModalVisible = useSelector((state) => state.todo.isModalVisible);
+ 
+  const closePopup = (e) => {
+    if (e.target.classList.contains("popup") || e.target.classList.contains("popup__button-close") ) { dispatch(setModalVisible({ isVisible: false}));}
+   
+  };
+ 
   function handleLoginInput(evt) {
-    setLogin(evt.target.value);
+    setLog(evt.target.value);
   }
 
   function handlePasswordInput(evt) {
@@ -14,21 +25,24 @@ function Login({ isOpen, onClose, onPopupClick, loginUser }) {
   function handleSubmit(evt) {
     evt.preventDefault();
     let formData = new FormData();
-    formData.append("username", login);
+    formData.append("username", log);
     formData.append("password", password);
-    loginUser(formData);
-    setLogin("");
+    dispatch(login(formData));
+    dispatch(setModalVisible({ isVisible: false, type: "login" }));
+    localStorage.setItem("isAdmin", "true");
+    setLog("");
     setPassword("");
   }
 
   return (
     <div
-      className={`popup  ${isOpen ? "popup_opened" : false}`}
-      onClick={onPopupClick}
+      className={`popup  ${isModalVisible.isVisible  &&
+        isModalVisible.type === "login" ? "popup_opened" : false}`}
+      onClick={closePopup}
     >
       <div className={"popup__container"}>
         <button
-          onClick={onClose}
+          onClick={closePopup}
           className="popup__button-close"
           type="button"
           aria-label="Закрыть окно"
@@ -41,7 +55,7 @@ function Login({ isOpen, onClose, onPopupClick, loginUser }) {
             className="popup__input"
             type="text"
             placeholder="Логин"
-            value={login || ""}
+            value={log || ""}
             onChange={handleLoginInput}
             required
           />

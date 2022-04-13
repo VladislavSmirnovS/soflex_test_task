@@ -1,15 +1,40 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setModalVisible, addNewTask } from "../../redux/actions/action";
 
-function AddTask({ isOpen, onClose, onPopupClick, addCard }) {
+function AddTask() {
   const [form, setForm] = React.useState({
     username: "",
     email: "",
     text: "",
   });
 
+  const token = useSelector((state) => state.todo.token);
+  const dispatch = useDispatch();
+  const isModalVisible = useSelector((state) => state.todo.isModalVisible);
+
+  const closePopup = (e) => {
+    if (
+      e.target.classList.contains("popup") ||
+      e.target.classList.contains("popup__button-close")
+    ) {
+      dispatch(setModalVisible({ isVisible: false}));
+    }
+  };
+
   function handleSubmit(e) {
     e.preventDefault();
-    addCard(form);
+
+    let task = new FormData();
+    task.append("username", form.username);
+    task.append("token", token);
+    task.append("email", form.email);
+    task.append("text", form.text);
+
+    dispatch(addNewTask(task));
+    dispatch(
+      setModalVisible({ isVisible: false, type: "taskAdd"})
+    );
     setForm({
       username: "",
       email: "",
@@ -19,12 +44,16 @@ function AddTask({ isOpen, onClose, onPopupClick, addCard }) {
 
   return (
     <div
-      className={`popup  ${isOpen ? "popup_opened" : false}`}
-      onClick={onPopupClick}
+      className={`popup  ${
+        isModalVisible.isVisible && isModalVisible.type === "taskAdd"
+          ? "popup_opened"
+          : false
+      }`}
+      onClick={closePopup}
     >
       <div className={"popup__container"}>
         <button
-          onClick={onClose}
+          onClick={closePopup}
           className="popup__button-close"
           type="button"
           aria-label="Закрыть окно"
