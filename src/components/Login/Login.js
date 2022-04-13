@@ -1,19 +1,22 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setModalVisible , login} from "../../redux/actions/action";
-
+import { setModalVisible, login } from "../../redux/actions/action";
 
 function Login() {
   const dispatch = useDispatch();
   const [log, setLog] = React.useState("");
   const [password, setPassword] = React.useState("");
   const isModalVisible = useSelector((state) => state.todo.isModalVisible);
- 
+
   const closePopup = (e) => {
-    if (e.target.classList.contains("popup") || e.target.classList.contains("popup__button-close") ) { dispatch(setModalVisible({ isVisible: false}));}
-   
+    if (
+      e.target.classList.contains("popup") ||
+      e.target.classList.contains("popup__button-close")
+    ) {
+      dispatch(setModalVisible({ isVisible: false }));
+    }
   };
- 
+
   function handleLoginInput(evt) {
     setLog(evt.target.value);
   }
@@ -36,8 +39,11 @@ function Login() {
 
   return (
     <div
-      className={`popup  ${isModalVisible.isVisible  &&
-        isModalVisible.type === "login" ? "popup_opened" : false}`}
+      className={`popup  ${
+        isModalVisible.isVisible && isModalVisible.type === "login"
+          ? "popup_opened"
+          : false
+      }`}
       onClick={closePopup}
     >
       <div className={"popup__container"}>

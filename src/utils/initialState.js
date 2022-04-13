@@ -16,7 +16,6 @@ export const initialState = () => ({
   totalNumber: 0,
   currentPage: 1,
   error: {},
-  success: "",
   sortDirection: "asc",
   isAdmin: localStorage.getItem("isAdmin") === "true" || false,
   token: localStorage.getItem("token") || "",

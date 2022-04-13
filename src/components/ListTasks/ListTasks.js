@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect } from "react";
 import { getSortedTasks } from "../../redux/actions/action";
+import { v4 as uuidv4 } from 'uuid';
 
 import "./ListTasks.css";
 import Pagination from "../Pagination/Pagination";
@@ -21,7 +22,7 @@ function ListTasks() {
       <p className="tasks__title">Список задач:</p>
       <div>
         {tasks.map((item) => (
-          <CardTask task={item} key={item.id} />
+          <CardTask key={uuidv4()} task={item}  />
         ))}
       </div>
       <Pagination />

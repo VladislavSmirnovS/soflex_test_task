@@ -4,7 +4,6 @@ import {
   SET_TASKS,
   SET_TOTAL_TASKS_NUM,
   SET_ERROR,
-  SET_SUCCESS,
   SET_SORT_DIRECTION,
   SET_ADMIN,
   SET_TOKEN,
@@ -32,8 +31,6 @@ const setTotalTasksNumber = (totalNumber) => ({
   type: SET_TOTAL_TASKS_NUM,
   totalNumber,
 });
-const setError = (error) => ({ type: SET_ERROR, error });
-const setSuccess = (success) => ({ type: SET_SUCCESS, success });
 const setAdmin = (isAdmin) => ({ type: SET_ADMIN, isAdmin });
 const setToken = (token) => ({ type: SET_TOKEN, token });
 
@@ -82,7 +79,6 @@ const login = (formData) => async (dispatch) => {
 
   if (data.status === "ok") {
     dispatch(setToken(data.message.token));
-    dispatch(setSuccess("You successfully logged in"));
     dispatch(setAdmin(true));
     localStorage.setItem("token", data.message.token);
   } else {
@@ -111,8 +107,6 @@ export {
   setSortCriteria,
   setModalVisible,
   addNewTask,
-  setError,
-  setSuccess,
   getSortedTasks,
   setSortDirection,
   login,

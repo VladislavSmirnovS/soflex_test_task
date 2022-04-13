@@ -24,6 +24,7 @@ function EditTask() {
       e.target.classList.contains("popup__button-close")
     ) {
       dispatch(setModalVisible({ isVisible: false }));
+      setCheckbox(false);
     }
   };
 
@@ -66,6 +67,7 @@ function EditTask() {
     dispatch(setModalVisible({ isVisible: false, type: "taskEdit" }));
     dispatch(updateTask(task, isModalVisible.id, token));
     dispatch(getSortedTasks());
+    // setCheckbox(false);
   }
 
   return (
@@ -102,7 +104,7 @@ function EditTask() {
             onChange={handleInput}
           />
           <div className="popup__check">
-            <input type="checkbox" value={checkbox} onChange={handleChange} />
+            <input type="checkbox" checked={checkbox} onChange={handleChange} />
             <label>Задача выполнена</label>
           </div>
           <button className="popup__btn" type="submit">

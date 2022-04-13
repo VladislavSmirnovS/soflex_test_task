@@ -43,7 +43,7 @@ function CardTask({ task }) {
       </button>
       <div className="card__block">
         <p className="card__element card__name">Имя: {task.username}</p>
-        <p className="card__element card__email">&#128386; {task.email} </p>
+        <p className="card__element card__email">🖂 {task.email} </p>
         <p className="card__element card__task-text">
           Текст задачи: {task.text}
         </p>

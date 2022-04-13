@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSortedTasks, setCurrentPage} from "../../redux/actions/action";
+import { getSortedTasks, setCurrentPage } from "../../redux/actions/action";
 import "./Pagination.css";
 
 function Pagination() {
@@ -9,11 +9,10 @@ function Pagination() {
   const currentPage = useSelector((state) => state.todo.currentPage);
   const sortCriteria = useSelector((state) => state.todo.sortCriteria);
   const sortDirection = useSelector((state) => state.todo.sortDirection);
-const totalPages= Math.ceil(totalNumber / 3);
+  const totalPages = Math.ceil(totalNumber / 3);
 
   const changePage = (page) => {
-    console.log(page)
-    dispatch(setCurrentPage(page))
+    dispatch(setCurrentPage(page));
     dispatch(getSortedTasks(sortCriteria, sortDirection, page));
   };
 
